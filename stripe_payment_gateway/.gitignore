@@ -18,3 +18,4 @@ go.work
 
 # Go module files
 go.sum
+.env
