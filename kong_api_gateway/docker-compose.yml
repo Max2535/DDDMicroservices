@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  kong-database:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_DB: kong
+      POSTGRES_PASSWORD: kong
+    volumes:
+      - kong-database-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kong"]
+      interval: 5s
+      retries: 5
+
+  kong-migration:
+    image: kong:latest
+    depends_on:
+      kong-database:
+        condition: service_healthy
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_CASSANDRA_CONTACT_POINTS: kong-database
+    entrypoint: [
+      "kong", "migrations", "bootstrap"
+    ]
+
+  kong:
+    image: kong:latest
+    restart: always
+    depends_on:
+      - kong-database
+      - kong-migration
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-database
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_CASSANDRA_CONTACT_POINTS: kong-database
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+    ports:
+      - "8000:8000"  # Proxy port
+      - "8443:8443"  # Proxy port for HTTPS
+      - "8001:8001"  # Admin API
+      - "8444:8444"  # Admin API for HTTPS
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+    volumes:
+      - kong-data:/usr/local/kong
+
+  konga:
+    image: pantsel/konga
+    restart: always
+    depends_on:
+      - kong
+    environment:
+      NODE_ENV: "production"
+      DB_ADAPTER: "postgres"
+      DB_HOST: kong-database
+      DB_USER: kong
+      DB_PASSWORD: kong
+      DB_DATABASE: kong
+    ports:
+      - "1337:1337"  # Konga Web UI
+
+volumes:
+  kong-database-data:
+  kong-data:
