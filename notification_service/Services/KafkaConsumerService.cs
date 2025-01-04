@@ -33,6 +33,7 @@ namespace NotificationService.Services
             while (true)
             {
                 var result = consumer.Consume();
+                Console.WriteLine($"Consumed message '{result.Message.Value}' at: '{result.TopicPartitionOffset}'.");
                 var notification = JsonConvert.DeserializeObject<OrderNotification>(result.Message.Value);
                 if (notification != null)
                 {
