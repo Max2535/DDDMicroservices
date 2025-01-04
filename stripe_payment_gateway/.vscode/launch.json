@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "go",
+        "request": "launch",
+        "name": "Launch Program",
+        "mode": "auto",
+        "program": "${workspaceFolder}/${input:programPath}",
+        "cwd": "${workspaceFolder}",
+        "envFile": "${workspaceFolder}/.env",
+        "args": []
+      }
+    ],
+    "inputs": [
+      {
+        "type": "pickString",
+        "id": "programPath",
+        "description": "Select the Go file to debug",
+        "options": [
+          "main.go",
+          "handlers/payment.go",
+          "handlers/webhook.go"
+        ]
+      }
+    ]
+  }
