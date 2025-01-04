@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// ตั้งค่า Environment Variables
-	os.Setenv("STRIPE_API_KEY", "sk_test_51I1MoJLiNasWpAoWHROPNNHErQwlsXhUyhRjX1MbjxYpWztLXuLMQelzMum6HTOf27iqDLZmYTn2gmqbLfeulGEV00AAsH2yqt")
+	os.Setenv("STRIPE_API_KEY", "xxxx")
 	os.Setenv("REDIS_HOST", "localhost")
 	os.Setenv("REDIS_PORT", "6379")
 
