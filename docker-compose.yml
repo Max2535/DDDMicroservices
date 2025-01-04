@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   mysql:
@@ -44,6 +44,7 @@ services:
       - type: volume
         source: MONGO_CONFIG
         target: /data/configdb
+
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
@@ -60,6 +61,31 @@ services:
       - MONGO
     depends_on:
       - mongo
+      
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: mydb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: yourpassword
+    ports:
+      - "8082:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 
 volumes:
   mysql_data:
@@ -67,6 +93,8 @@ volumes:
     name: MONGO_DATA
   MONGO_CONFIG:
     name: MONGO_CONFIG
+  postgres-data:
+  pgadmin-data:
 
 networks:
   mynet:
