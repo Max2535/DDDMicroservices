@@ -1,3 +1,8 @@
+-- เชื่อมต่อกับ
+\c order_db;
+
+
+-- สร้างตารางใน db
 CREATE TABLE customers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
