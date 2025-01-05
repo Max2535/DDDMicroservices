@@ -75,7 +75,6 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./init_scripts:/docker-entrypoint-initdb.d
       
-
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -148,6 +147,18 @@ services:
     depends_on:
       - kafka
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # สำหรับการเชื่อมต่อรับ-ส่งข้อความ
+      - "15672:15672"   # สำหรับหน้า Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: admin   # ตั้งค่า username (เปลี่ยนตามต้องการ)
+      RABBITMQ_DEFAULT_PASS: admin   # ตั้งค่า password (เปลี่ยนตามต้องการ)
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   mysql_data:
   MONGO_DATA:
@@ -158,6 +169,7 @@ volumes:
   pgadmin-data:
   redis_volume_data:
   redis_insight_volume_data:
+  rabbitmq_data:
 
 networks:
   mynet:
