@@ -1,4 +1,4 @@
-package com.example.dao;
+package com.example.usermanagement.dao;
 
 public class UserRequest {
     private String username;
