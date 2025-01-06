@@ -1,0 +1,5 @@
+dotnet tool install --global dotnet-ef 
+dotnet ef dbcontext scaffold "Host=localhost;Database=inventory_db;Username=admin;Password=yourpassword" "Npgsql.EntityFrameworkCore.PostgreSQL" -f --use-database-names -o Models --context-dir Data  -c InventDbContext
+
+
+//MovementType  "Inbound" or "Outbound"
